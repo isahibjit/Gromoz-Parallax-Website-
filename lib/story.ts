@@ -95,7 +95,7 @@ export interface PropertySceneProps {
 export function createStoryState(): StorySceneState {
   return {
     progress: 0,
-    camera: { x: 7.6, y: 6.5, z: 9.3, targetX: 0, targetY: 2.6, targetZ: 0 },
+    camera: { x: 8.2, y: 7.0, z: 10.0, targetX: 0, targetY: 3.0, targetZ: 0 },
     architecture: {
       upperLift: 0,
       facadeShift: 0,

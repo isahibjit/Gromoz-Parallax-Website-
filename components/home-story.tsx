@@ -549,13 +549,13 @@ export function HomeStory() {
         .to(scene, { leadDetails: 1, duration: 0.04 }, 0.12)
         .to(
           scene.camera,
-          { x: 8.5, y: 6.5, z: 10, targetY: 2.7, duration: 0.055 },
+          { x: 9.0, y: 7.2, z: 10.5, targetY: 3.1, duration: 0.055 },
           0.1,
         )
         .addLabel("enquiry", 0.17)
         .to(
           scene.camera,
-          { x: 8, y: 6.9, z: 10.2, targetY: 3.3, duration: 0.065 },
+          { x: 8.5, y: 7.4, z: 10.8, targetY: 3.6, duration: 0.065 },
           0.25,
         )
         .to(
@@ -577,11 +577,11 @@ export function HomeStory() {
         .to(
           scene.camera,
           {
-            x: 5.8,
-            y: 5.4,
-            z: 7.2,
+            x: 6.2,
+            y: 5.8,
+            z: 7.6,
             targetX: 0.6,
-            targetY: 3.5,
+            targetY: 3.8,
             targetZ: 0.3,
             duration: 0.05,
           },
@@ -612,11 +612,11 @@ export function HomeStory() {
         .to(
           scene.camera,
           {
-            x: 10,
-            y: 8,
-            z: 13,
+            x: 10.5,
+            y: 8.5,
+            z: 13.5,
             targetX: 0,
-            targetY: 2.8,
+            targetY: 3.2,
             targetZ: 0,
             duration: 0.07,
           },
