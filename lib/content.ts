@@ -90,62 +90,6 @@ export const audiences = [
     ],
   },
 ];
-export const chapters = [
-  {
-    title: "Capture and assign",
-    text: "An enquiry arrives. Give it context, a source and one person responsible for the next step.",
-    stage: "New enquiry",
-    action: "Call to understand requirements",
-    date: "16 Oct, 10:00 am",
-  },
-  {
-    title: "Match and follow up",
-    text: "Keep the buyer’s requirements beside a suitable property and a visible follow-up date.",
-    stage: "Qualified",
-    action: "Discuss Cedar Heights · A-1204",
-    date: "16 Oct, 2:30 pm",
-  },
-  {
-    title: "Plan the site visit",
-    text: "Agree a time, share the details and keep the visit outcome in the same record.",
-    stage: "Visit scheduled",
-    action: "Site visit at Cedar Heights",
-    date: "17 Oct, 11:00 am",
-  },
-  {
-    title: "Track the deal",
-    text: "Move the conversation forward with a clear stage and an explicit next action.",
-    stage: "Negotiation",
-    action: "Share payment-plan details",
-    date: "18 Oct, 10:30 am",
-  },
-];
-export const faqs = [
-  [
-    "Who is Gromoze intended for?",
-    "The proposed workspace is designed around developers, brokerages and real estate sales teams. The demo conversation can help assess your team’s needs.",
-  ],
-  [
-    "What can I explore in this preview?",
-    "A fictional enquiry moves through ownership, property matching, a site visit and a pipeline discussion. All screens are illustrative; capabilities are awaiting confirmation.",
-  ],
-  [
-    "What happens in a demo?",
-    "The intended demo is a conversation about your sales process, team structure and requirements. Scheduling and availability need confirmation from Gromoze.",
-  ],
-  [
-    "Are prices available?",
-    "Plans and prices have not been confirmed. Use the pricing enquiry preview to outline team size, business type and requirements.",
-  ],
-  [
-    "Can we discuss imports and integrations?",
-    "Yes—include those requirements in a demo discussion. This website does not claim that any particular import or integration is available.",
-  ],
-  [
-    "Does this preview save my enquiries?",
-    "No. The forms validate locally and show a preview result. They do not send or retain your entered details.",
-  ],
-];
 export const routes = [
   "product",
   "pricing",
