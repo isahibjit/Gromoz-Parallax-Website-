@@ -5,6 +5,8 @@ Results below cover the integrated architectural V2 revision. Browser checks use
 ## Source and build
 
 - Full `npm.cmd run lint`, strict TypeScript check and final production build passed. The static build generated 20 pages.
+- The final copy now uses the owner's supplied public property-site reference for buyer requirements, apartment configuration/area, visit preparation and follow-up questions. Gromoze branding and the fictional sample remain unchanged.
+- Two export-normalization regression tests pass. The installed Next.js Windows exporter produced nested segment files while the client requested flat filenames; the build now supplies 18 missing aliases without changing page content or disabling prefetching.
 - Homepage source review found explicit sample/local behavior, conditional partner scope and no invented pricing or integration claims.
 - The homepage design detector reported only the Inter font-popularity warning; that existing font is required by the brief.
 - Runtime dependency audit: zero findings. Five high-severity development-only findings remain in the `eslint-config-next` -> `micromatch` -> `braces@3.0.3` chain (GHSA-vfj7-8cjw-p6xm), with no compatible fix available in the checked dependency set.
@@ -19,6 +21,7 @@ Results below cover the integrated architectural V2 revision. Browser checks use
 - Forms accepted an optional blank phone, rejected whitespace-only required text, retained values when returning, and clearly reported preview completion without sending a request.
 - Required routes returned HTTP 200; an unknown route returned 404.
 - The production static export was opened in Chrome: the WebGL canvas initialized and development frame controls were absent (`production-home.jpg`).
+- After export normalization, Chrome navigation succeeded and requested segment-data files returned HTTP 200 for demo, pricing, about and privacy routes. The updated property page was inspected in the production export (`reference-property.jpg`).
 
 ## Captured evidence
 
@@ -32,6 +35,7 @@ Actual screenshots are in `artifacts/v2/`:
 | Motion/WebGL alternatives | `reduced-motion.jpg`, `webgl-fallback.jpg` |
 | Property, visits and pipeline | `property-desktop.jpg`, `property-mobile.jpg`, `visits-desktop.jpg`, `visits-mobile.jpg`, `pipeline-desktop.jpg`, `pipeline-mobile.jpg` |
 | Partner, privacy and demo pages | `partners-desktop.jpg`, `partners-mobile.jpg`, `privacy-desktop.jpg`, `privacy-mobile.jpg`, `demo-form.jpg`, `demo-mobile.jpg` |
+| Final production export | `production-home.jpg`, `reference-property.jpg` |
 
 No scroll recording was captured. Transition checks were performed interactively; screenshots document individual states.
 

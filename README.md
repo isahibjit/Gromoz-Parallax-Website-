@@ -11,12 +11,15 @@ npm.cmd ci
 npm.cmd run dev
 npm.cmd run typecheck
 npm.cmd run lint
+npm.cmd test
 npm.cmd run build
 ```
 
-The development server defaults to `http://localhost:3000`. Other shells can use `npm` instead of `npm.cmd`. The static export uses trailing slashes and writes the deployable site to `out/`. Deploy that directory through the existing private hosting workflow; no Next.js server is required. A local build does not update the previously shared private preview automatically. Keep hosting access controls in place; noindex is not access control.
+The development server defaults to `http://localhost:3000`. Other shells can use `npm` instead of `npm.cmd`. The static export uses trailing slashes and writes the deployable site to `out/`; no Next.js server is required. `gromoze-v2-build.tar.gz` contains the final static export, with `index.html` at its root. The hosting destination is not yet confirmed, and no hosted publication is claimed. The legacy Sites manifest is retained for review. Configure hosting access controls for a private preview; noindex is not access control.
 
 The stack is Next.js App Router, React, strict TypeScript, CSS Modules, GSAP/ScrollTrigger with `@gsap/react`, Three.js and React Three Fiber. Native scrolling remains the default.
+
+Use `npm.cmd run build` rather than invoking `next build` directly. The build adds missing flat segment-data filenames to work around the installed Next.js Windows static-export issue ([upstream report](https://github.com/vercel/next.js/issues/85374)). `scripts/normalize-static-export.mjs` preserves original assets, leaves correct exports unchanged and rejects conflicting aliases. Its regression tests cover nested routes, repeat runs and collisions. Reassess this workaround when upgrading Next.js.
 
 ## Source map
 

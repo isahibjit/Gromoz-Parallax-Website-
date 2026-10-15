@@ -545,20 +545,13 @@
   line-height: 1.65;
   margin-top: 18px;
 }
-.story[data-chapter="3"] .captions,
-.story[data-chapter="4"] .captions,
-.story[data-chapter="5"] .captions {
-  width: 245px;
-  top: 12%;
+.captions > [data-caption-layout="compact"] {
+  width: clamp(176px, 15.3vw, 245px);
 }
-.story[data-chapter="3"] .captions h2,
-.story[data-chapter="4"] .captions h2,
-.story[data-chapter="5"] .captions h2 {
-  font-size: 38px;
+.captions > [data-caption-layout="compact"] h2 {
+  font-size: clamp(28px, 2.4vw, 38px);
 }
-.story[data-chapter="3"] .captions p,
-.story[data-chapter="4"] .captions p,
-.story[data-chapter="5"] .captions p {
+.captions > [data-caption-layout="compact"] p {
   font-size: 13px;
 }
 .closingAction {
@@ -841,10 +834,8 @@
   .captions p {
     margin-top: 13px;
   }
-  .story[data-chapter="3"] .captions h2,
-  .story[data-chapter="4"] .captions h2,
-  .story[data-chapter="5"] .captions h2 {
-    font-size: 34px;
+  .captions > [data-caption-layout="compact"] h2 {
+    font-size: clamp(28px, 2.4vw, 34px);
   }
   .workspace {
     height: 68%;

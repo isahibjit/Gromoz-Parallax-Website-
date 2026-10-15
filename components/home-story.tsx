@@ -24,6 +24,7 @@ import {
   Users,
 } from "lucide-react";
 import { sampleLead, storyChapters, type ScenePoint } from "@/lib/story";
+import { storyCopyOpacity } from "@/lib/story-copy";
 import {
   createHomeStoryState,
   storyHolds,
@@ -450,11 +451,18 @@ export function HomeStory() {
           });
         }
         if (hero) {
-          hero.style.opacity = String(scene.heroOpacity);
+          const opacity = storyCopyOpacity(scene.progress, -1);
+          hero.style.opacity = String(opacity);
           hero.style.visibility =
-            scene.heroOpacity < 0.01 ? "hidden" : "visible";
-          hero.style.transform = `translateY(${-20 * (1 - scene.heroOpacity)}px)`;
+            opacity < 0.01 ? "hidden" : "visible";
+          hero.style.transform = `translateY(${-12 * (1 - opacity)}px)`;
         }
+        captions.forEach((caption, i) => {
+          const opacity = storyCopyOpacity(scene.progress, i);
+          caption.style.opacity = String(opacity);
+          caption.style.visibility = opacity < 0.01 ? "hidden" : "visible";
+          caption.style.transform = `translateY(${8 * (1 - opacity)}px)`;
+        });
         if (leadDetails) leadDetails.style.opacity = String(scene.leadDetails);
         if (record.current)
           record.current.style.clipPath = `inset(0 0 ${scene.leadCompact * 64}% 0 round 10px)`;
@@ -468,9 +476,10 @@ export function HomeStory() {
         if (workspaceDetails)
           workspaceDetails.style.opacity = String(scene.workspaceDetails);
         if (closing) {
-          closing.style.opacity = String(scene.closingOpacity);
+          const opacity = storyCopyOpacity(scene.progress, storyChapters.length - 1);
+          closing.style.opacity = String(opacity);
           closing.style.visibility =
-            scene.closingOpacity < 0.01 ? "hidden" : "visible";
+            opacity < 0.01 ? "hidden" : "visible";
         }
         if (progressFill)
           progressFill.style.transform = `scaleX(${scene.progress})`;
@@ -494,10 +503,6 @@ export function HomeStory() {
             count.textContent = Number(count.dataset.laneCount) === (chapter >= 4 ? 2 : 1) ? "01" : "—";
           });
           element.dataset.chapter = String(chapter);
-          captions.forEach((caption, i) => {
-            caption.style.opacity = i === chapter ? "1" : "0";
-            caption.style.visibility = i === chapter ? "visible" : "hidden";
-          });
           rail.forEach((link) => {
             const current =
               Number(link.dataset.storyNav) ===
@@ -520,11 +525,15 @@ export function HomeStory() {
           pin: pinned,
           start: () => `top ${headerHeight()}px`,
           end: () => `+=${Math.round(innerHeight * 4.2)}`,
-          scrub: 0.45,
+          scrub: 0.6,
           invalidateOnRefresh: false,
           onRefresh: () => {
             width = canvas.clientWidth;
             height = canvas.clientHeight;
+            const finalCaption = captions.item(captions.length - 1);
+            if (closing && finalCaption?.parentElement) {
+              closing.style.top = `${finalCaption.parentElement.offsetTop + finalCaption.offsetHeight + 24}px`;
+            }
             render();
           },
         },
@@ -532,7 +541,6 @@ export function HomeStory() {
       timeline.current = sequence;
       sequence
         .to(scene, { progress: 1, duration: 1, ease: "none" }, 0)
-        .to(scene, { heroOpacity: 0, duration: 0.05 }, 0.1)
         .to(
           scene.surfaces.lead,
           { x: 0.065, y: 0.38, scale: 1.05, duration: 0.055 },
@@ -654,7 +662,6 @@ export function HomeStory() {
         .addLabel("workspace", 0.7)
         .to(scene.surfaces.lead, { x: 0.745, y: 0.445, duration: 0.055 }, 0.79)
         .addLabel("progress", 0.86)
-        .to(scene, { closingOpacity: 1, duration: 0.025 }, 0.94)
         .addLabel("demo", 0.97);
       render();
       const goToHash = () => {
@@ -871,7 +878,7 @@ export function HomeStory() {
           </div>
           <div className={styles.captions} aria-hidden="true">
             {storyChapters.map((c, i) => (
-              <div data-caption={i} key={c.id}>
+              <div data-caption={i} data-caption-layout={i >= 3 ? "compact" : "wide"} key={c.id}>
                 <span>
                   0{Math.min(i + 1, 4)} <span aria-hidden="true">/</span>{" "}
                   {c.label}

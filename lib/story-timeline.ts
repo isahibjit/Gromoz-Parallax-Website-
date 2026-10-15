@@ -15,14 +15,12 @@ export interface HomeStoryState extends StorySceneState {
     visit: SurfaceState;
     workspace: SurfaceState;
   };
-  heroOpacity: number;
   leadDetails: number;
   leadCompact: number;
   propertyCompact: number;
   visitCompact: number;
   workspaceDetails: number;
   connectorProgress: number;
-  closingOpacity: number;
 }
 export function createHomeStoryState(): HomeStoryState {
   return {
@@ -34,14 +32,12 @@ export function createHomeStoryState(): HomeStoryState {
       visit: { x: 0.4, y: 0.38, scale: 1, opacity: 0 },
       workspace: { x: 0.23, y: 0.22, scale: 1, opacity: 0 },
     },
-    heroOpacity: 1,
     leadDetails: 0,
     leadCompact: 0,
     propertyCompact: 0,
     visitCompact: 0,
     workspaceDetails: 0,
     connectorProgress: 1,
-    closingOpacity: 0,
   };
 }
 
