@@ -75,3 +75,5 @@ The owner supplied https://www.truerootrealty.com/ as a workflow reference. Its 
 ## Launch inputs
 
 Confirm product scope, prices, legal identity, verified contact and application destination; finalize legal drafts; implement and verify real enquiry delivery; complete the checks in `VALIDATION.md`; and verify representative devices/browsers. Measure laboratory performance separately from field Web Vitals. LCP/INP/CLS targets are goals, not results established by a local build.
+#   G r o m o z - P a r a l l a x - W e b s i t e -  
+ 
