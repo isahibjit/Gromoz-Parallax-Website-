@@ -41,7 +41,7 @@ The enquiry remains a persistent HTML object. Canvas projection supplies the sel
 
 Phones, short screens and reduced motion use normal document flow with a hero and four focused chapters. The original SVG building is available before WebGL. The footer motion preference is stored locally. Chapter links navigate real scroll positions; Skip targets `#product-explorer` and focuses `#explorer-heading`. Development-only seek controls expose the reading holds.
 
-These describe implementation, not measured performance or browser verification. Record actual evidence in `VALIDATION.md`.
+Reload restoration stores only the current URL, viewport dimensions and scroll position in session storage. It does not store enquiry or form data. Local Chrome checks and measured renderer statistics are recorded in `VALIDATION.md`; screenshots are in `artifacts/v2/`.
 
 ## Data and content truth
 
@@ -53,7 +53,7 @@ Product capabilities, partner access, integrations/imports, reports, onboarding 
 
 `lib/site-config.ts` leaves legal entity, address, contact details, sign-in URL and submission endpoint unset. Forms validate locally and explicitly report that no enquiry was sent, saved or booked. Returning to the form retains inputs. `.env.example` documents future server-only configuration; it does not implement delivery. Real delivery needs a server endpoint/service, validation, rate limiting, failure handling, receipt verification and matching privacy wording.
 
-Legal pages remain private drafts with missing fields. No authentication service, CRM backend, billing, database migration or analytics integration is included. No non-essential cookies are configured by this source. Account separately for local motion preferences, external font requests and the host's actual logs/cookies when finalizing policies.
+Legal pages remain private drafts with missing fields. No authentication service, CRM backend, billing, database migration or analytics integration is included. No non-essential cookies are configured by this source. Account separately for local motion preferences, session-only scroll restoration, external font requests and the host's actual logs/cookies when finalizing policies.
 
 All routes are noindex and `public/robots.txt` disallows crawling. No production canonical or sitemap is emitted without a verified public domain. Update public indexing, canonical/social URLs and sitemap only after content approval.
 
@@ -66,6 +66,8 @@ All routes are noindex and `public/robots.txt` disallows crawling. No production
 - Lucide icons use the package's ISC license. Manrope and Inter use their open font licenses and currently load from Google Fonts; self-host if required by deployment/privacy decisions.
 
 The supplied visual concept guides composition and materials; it is not embedded as a replacement for the scene.
+
+The owner supplied https://www.truerootrealty.com/ as a workflow reference. Its public property pages informed buyer requirements, property specifications and visit preparation only. Gromoze retains its own branding and fictional sample; the reference does not verify Gromoze's CRM capabilities, contact details, pricing or legal identity.
 
 ## Launch inputs
 

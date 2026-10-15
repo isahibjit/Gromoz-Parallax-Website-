@@ -11,7 +11,7 @@ export const modules: {
     title: "Lead management",
     task: "Give every enquiry a clear owner.",
     detail:
-      "Explore qualification, follow-up dates and a shared activity history, built around one lead record.",
+      "Explore a buyer’s property requirements, a named owner and the next follow-up around one sample enquiry.",
     status: "draft",
   },
   {
@@ -19,7 +19,7 @@ export const modules: {
     title: "Property inventory",
     task: "Find the property that fits.",
     detail:
-      "Explore project and unit information alongside a buyer’s requirements, with sample availability.",
+      "Review the sample project, unit, apartment configuration and area alongside the buyer’s requirements.",
     status: "draft",
   },
   {
@@ -27,7 +27,7 @@ export const modules: {
     title: "Site visits",
     task: "Turn interest into a visit.",
     detail:
-      "Explore a shared schedule, visit details and a place to record what happens next.",
+      "Review the visit time, property and owner, then prepare the questions and property details for the follow-up.",
     status: "draft",
   },
   {
@@ -63,7 +63,7 @@ export const audiences = [
     text: "Bring project enquiries, unit discussions and sales activity into the same conversation.",
     needs: [
       "Project-level enquiry ownership",
-      "Unit availability discussions",
+      "Unit configuration and area discussions",
       "A view of the next sales activity",
     ],
   },
@@ -71,11 +71,11 @@ export const audiences = [
     slug: "brokerages",
     title: "Brokerages",
     heading: "Keep your team on the same page.",
-    text: "Explore a shared approach to buyer enquiries, property matches and timely follow-ups.",
+    text: "Keep buyer requirements, project discussions and visit preparation connected to a named owner and next action.",
     needs: [
       "A named owner for each enquiry",
-      "Buyer and property context together",
-      "A clear queue of next actions",
+      "Buyer requirements beside property details",
+      "Visit preparation and follow-up questions",
     ],
   },
   {

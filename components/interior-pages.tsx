@@ -223,7 +223,7 @@ const featureDetails: Record<string, FeatureDetail> = {
     kind: "enquiry",
     heading: "Start with the person. Keep the context.",
     intro:
-      "A useful enquiry record makes responsibility and the next conversation easy to understand.",
+      "Start with what the buyer is looking for, which property is being discussed and who will take the next conversation forward.",
     points: [
       [
         "One named owner",
@@ -231,11 +231,11 @@ const featureDetails: Record<string, FeatureDetail> = {
       ],
       [
         "A connected activity history",
-        "The property discussion and sample visit sit alongside the enquiry.",
+        `The discussion about ${sampleLead.project}, unit ${sampleLead.unit}, stays connected to the sample visit.`,
       ],
       [
         "An action with a purpose",
-        "Sharing the requested property details gives the follow-up a clear starting point.",
+        "Clarify which property details the buyer needs before preparing the follow-up.",
       ],
     ],
   },
@@ -243,7 +243,7 @@ const featureDetails: Record<string, FeatureDetail> = {
     kind: "property",
     heading: "The unit belongs in the conversation.",
     intro:
-      "Review a focused project and unit view beside the buyer’s requirements, without losing the enquiry that brought you here.",
+      "Review the project, unit, apartment configuration and illustrative area before discussing whether the property suits the buyer.",
     points: [
       [
         "Project to unit",
@@ -251,11 +251,11 @@ const featureDetails: Record<string, FeatureDetail> = {
       ],
       [
         "Requirements in view",
-        "The sample record keeps the requested apartment type alongside the property.",
+        `Use the sample ${sampleLead.requirement.toLowerCase()} and ${sampleLead.area} area to frame the buyer’s questions about layout and space.`,
       ],
       [
         "Discuss the details",
-        "Use the demo to confirm actual inventory fields, availability rules and access permissions.",
+        "Confirm the area basis and actual unit availability during the property discussion. This sample does not establish either.",
       ],
     ],
   },
@@ -267,11 +267,11 @@ const featureDetails: Record<string, FeatureDetail> = {
     points: [
       [
         "Before the visit",
-        "Review the sample appointment with its buyer, unit and owner in one place.",
+        "Check the sample visit time, buyer, unit and owner, then prepare questions about the layout and space.",
       ],
       [
         "During the conversation",
-        "Keep the property identity clear when several enquiries are moving at once.",
+        "Discuss the apartment configuration and identify which property details the buyer wants to review afterward.",
       ],
       [
         "After the visit",
@@ -415,19 +415,19 @@ const solutionDetails: Record<
     kind: "enquiry",
     heading: "Give the next conversation a clear starting point.",
     description:
-      "Buyer requirements, property discussions and ownership belong in the same working record.",
+      "Buyer requirements, apartment details and visit preparation give the owner a practical starting point for each conversation.",
     steps: [
       [
         "Understand the enquiry",
-        "Keep the buyer’s requirements close to the property conversation.",
+        "Clarify the apartment configuration and space the buyer needs before discussing a project or unit.",
       ],
       [
         "Coordinate the team",
-        "A named owner makes the next responsibility visible.",
+        `${sampleLead.owner} stays attached to the sample enquiry and visit, keeping responsibility visible.`,
       ],
       [
         "Follow up with context",
-        "Use the sample visit outcome to explain the next action.",
+        "Use the visit conversation to identify the property details and questions to address next.",
       ],
     ],
   },
