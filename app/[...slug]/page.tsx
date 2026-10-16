@@ -37,19 +37,19 @@ const pageCopy: Readonly<Record<string, PageCopy | undefined>> = {
       "Explore the Gromoze enquiry preview and describe your team's needs. Verified business contact details and enquiry delivery are awaiting configuration.",
   },
   "privacy-policy": {
-    title: "Privacy policy draft",
+    title: "Privacy policy",
     description:
-      "Read Gromoze's private privacy-policy draft, including website data, customer records, providers, retention and rights. Business details remain under review.",
+      "Learn how Solverix Technologies Pvt. Ltd. handles Gromoze website information, browser storage, external fonts, correspondence and privacy requests.",
   },
   "terms-of-service": {
-    title: "Terms of service draft",
+    title: "Terms of service",
     description:
-      "Review the private Gromoze service-terms draft covering accounts, service scope, responsibilities, subscriptions and data. This is not an effective agreement.",
+      "Read the terms governing the Gromoze website, its demonstrations, acceptable use, intellectual property and enquiries. Operated by Solverix Technologies Pvt. Ltd.",
   },
   "cookie-policy": {
-    title: "Cookie policy draft",
+    title: "Cookie and browser-storage notice",
     description:
-      "Review this Gromoze preview's motion-preference storage and cookie practices. Policy wording and hosting details remain subject to review.",
+      "Understand Gromoze's motion preference, session-only story position, external font requests and browser-storage controls.",
   },
 };
 

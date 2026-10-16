@@ -7,6 +7,7 @@ import { HomeStory } from "./home-story";
 import { HomeSections } from "./homepage-sections";
 import { BuildingPoster } from "./building-poster";
 import { siteConfig } from "@/lib/site-config";
+import { legalDocuments, type LegalKind } from "@/lib/legal-content";
 import { CTA, Logo } from "./ui";
 import { FeaturePage, ProductOverview, SolutionPage } from "./interior-pages";
 import interiorStyles from "./interior-pages.module.css";
@@ -218,12 +219,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="container footer-bottom">
           <small>
-            © {new Date().getFullYear()} Gromoze · Operating entity pending
-            confirmation
+            © {new Date().getFullYear()} Gromoze · {siteConfig.legalEntity}
           </small>
           <div>
-            <Link href="/privacy-policy">Privacy draft</Link>
-            <Link href="/terms-of-service">Terms draft</Link>
+            <Link href="/privacy-policy">Privacy policy</Link>
+            <Link href="/terms-of-service">Terms of service</Link>
             <Link href="/cookie-policy">Cookies</Link>
             <button onClick={toggleMotion} aria-pressed={reduced}>
               {reduced ? "Reduce motion: on" : "Motion: follows system"}
@@ -283,8 +283,8 @@ function DemoForm({ pricing = false }: { pricing?: boolean }) {
           <h2>Your preview is complete.</h2>
           <p>
             Your details passed local validation. No request has been submitted
-            or booked. A delivery service and verified contact are needed before
-            launch.
+            or booked. To send an enquiry, email{" "}
+            <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>.
           </p>
           <button
             className="button secondary"
@@ -389,7 +389,7 @@ function DemoForm({ pricing = false }: { pricing?: boolean }) {
           <p className="form-privacy">
             This concept validates your entries in this browser only. Don’t
             enter sensitive information. Read the{" "}
-            <Link href="/privacy-policy">privacy draft</Link>.
+            <Link href="/privacy-policy">privacy policy</Link>.
           </p>
           <button className="button" type="submit" disabled={!hydrated}>
             {"Preview " + (pricing ? "pricing enquiry" : "demo request")}
@@ -399,66 +399,14 @@ function DemoForm({ pricing = false }: { pricing?: boolean }) {
     </form>
   );
 }
-const privacySections = [
-  "Operating entity and contact",
-  "Website visitor data",
-  "Customer account data",
-  "Information handled within the SaaS",
-  "Purposes of processing",
-  "Cookies and analytics",
-  "Service providers",
-  "Sharing and transfers",
-  "Retention and deletion",
-  "Security description",
-  "Individual rights and requests",
-  "Policy updates",
-  "Privacy contact",
-];
-const termsSections = [
-  "Contracting entity",
-  "Eligibility and accounts",
-  "Service scope",
-  "Customer responsibilities",
-  "Acceptable use",
-  "Subscriptions and payments",
-  "Renewal and cancellation",
-  "Customer data and intellectual property",
-  "Third-party services",
-  "Suspension and termination",
-  "Warranties and liability",
-  "Governing law and disputes",
-  "Changes",
-  "Contact",
-];
-function Legal({
-  terms = false,
-  cookies = false,
-}: {
-  terms?: boolean;
-  cookies?: boolean;
-}) {
-  const sections = cookies
-    ? ["Current website storage", "Cookies and analytics", "Your preferences"]
-    : terms
-      ? termsSections
-      : privacySections;
+function Legal({ kind }: { kind: LegalKind }) {
+  const document = legalDocuments[kind];
   return (
     <article className={`container legal ${interiorStyles.legal}`}>
-      <span className="sample-tag">Private draft · Not legally approved</span>
-      <h1>
-        {cookies
-          ? "Cookie Policy"
-          : terms
-            ? "Terms of Service"
-            : "Privacy Policy"}
-      </h1>
-      <p className="legal-intro">
-        {cookies
-          ? "This preview uses browser storage for your motion preference and scroll restoration. It includes no analytics scripts or non-essential cookies."
-          : "This is a structured policy layout for review. It is not an effective agreement or an approved description of business practices."}
-      </p>
+      <h1>{document.title}</h1>
+      <p className="legal-intro">{document.intro}</p>
       <p className="legal-date">
-        Effective date: [EFFECTIVE_DATE] · Last updated: {siteConfig.legalPreparedDate} (draft)
+        Effective date: {siteConfig.legalEffectiveDate} | Last updated: {siteConfig.legalUpdatedDate}
       </p>
       <details className="legal-contents" open>
         <summary>
@@ -466,78 +414,33 @@ function Legal({
           <ChevronDown size={18} />
         </summary>
         <nav aria-label="On this page"><ol>
-          {sections.map((s, i) => (
-            <li key={s}>
-              <a href={"#legal-" + i}>{s}</a>
+          {document.sections.map((section, index) => (
+            <li key={section.title}>
+              <a href={`#legal-${index}`}>{section.title}</a>
             </li>
           ))}
         </ol></nav>
       </details>
-      {sections.map((s, i) => (
-        <section id={"legal-" + i} key={s}>
-          <h2>
-            {i + 1}. {s}
-          </h2>
-          <p>
-            {cookies
-              ? i === 0
-                ? "The gromoze-motion preference is stored locally in your browser. A session-only story position stores the page URL, viewport dimensions and scroll position to restore a reload. No form contents are stored."
-                : i === 1
-                  ? "No third-party analytics, advertising scripts or non-essential cookies are included in this preview. Review hosting infrastructure before finalizing a production cookie inventory."
-                  : "Use the Reduce motion control in the footer to change the saved preference. Clearing this site’s browser storage resets it. A consent manager should be added only if actual non-essential scripts require one."
-              : terms
-                ? termsText(i)
-                : privacyText(i)}
-          </p>
+      {document.sections.map((section, index) => (
+        <section id={`legal-${index}`} key={section.title}>
+          <h2>{index + 1}. {section.title}</h2>
+          {section.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          {section.links && <ul>
+            {section.links.map(link => <li key={link.href}>
+              {link.href.startsWith("/")
+                ? <Link href={link.href}>{link.label}</Link>
+                : <a href={link.href}>{link.label}</a>}
+            </li>)}
+          </ul>}
         </section>
       ))}
     </article>
   );
 }
-function privacyText(i: number) {
-  const texts = [
-    "Confirm [LEGAL_ENTITY_NAME], [BUSINESS_ADDRESS] and the website operator’s verified contact before publication.",
-    "This preview does not send form entries. Production visitor logs, hosting data and any future form processing must be inventoried and described before launch.",
-    "Account registration and authentication are outside this preview. Confirm the actual account fields, purposes and practices before describing the service.",
-    "The product may handle records uploaded by a business. These must be distinguished from Gromoze’s own website and account operations. Legal roles and instructions remain to be confirmed.",
-    "Document the actual reasons for collecting and using each category of information. Do not assign a legal basis until reviewed against confirmed practices.",
-    "This preview stores a local motion preference and a session-only scroll position. No analytics or advertising scripts are included. Revisit this section if the implementation changes.",
-    "Confirm hosting, communication, support and other providers, their purposes and the information they handle. [SERVICE_PROVIDER_LIST]",
-    "Confirm any sharing arrangements, locations and applicable safeguards. [SHARING_AND_TRANSFER_DETAILS]",
-    "Define retention periods, deletion workflows and any justified exceptions. [RETENTION_RULES]",
-    "Describe implemented safeguards accurately after a technical review. No certification or security guarantee is asserted in this draft.",
-    "Confirm applicable rights and a verified request process, including identity verification and response handling. [RIGHTS_REQUEST_PROCESS]",
-    "Confirm how changes are dated and communicated to affected people. [UPDATE_PROCESS]",
-    "Provide the verified privacy contact and request address. [PRIVACY_CONTACT]",
-  ];
-  return texts[i];
-}
-function termsText(i: number) {
-  const texts = [
-    "Identify [LEGAL_ENTITY_NAME] and [BUSINESS_ADDRESS]. This draft does not establish a contract.",
-    "Confirm eligibility rules, account ownership and account security responsibilities. [ACCOUNT_TERMS]",
-    "The website demonstrates proposed capabilities using fictional records. Confirm the contracted service, limitations and documentation. [SERVICE_SCOPE]",
-    "Define responsibilities for lawful customer data, authorized users, accurate instructions and account administration. [CUSTOMER_RESPONSIBILITIES]",
-    "Confirm permitted uses, prohibited conduct and enforcement procedures for the actual service. [ACCEPTABLE_USE]",
-    "Plans, taxes, payment schedules and fees have not been approved. [BILLING_TERMS]",
-    "Confirm renewal notices, cancellation mechanisms, refund rules and effects of cancellation. [RENEWAL_AND_CANCELLATION]",
-    "Confirm data ownership, necessary service permissions, export provisions and intellectual property terms. [DATA_AND_IP_TERMS]",
-    "Confirm any actual external services, applicable terms and responsibilities. No integration availability is promised. [THIRD_PARTY_TERMS]",
-    "Confirm grounds, notice, access and post-termination data handling. [TERMINATION_TERMS]",
-    "Require review of warranties, disclaimers and liability provisions against the actual service and applicable law. [WARRANTY_AND_LIABILITY_TERMS]",
-    "Confirm governing law, jurisdiction and dispute resolution. [GOVERNING_LAW]",
-    "Confirm how revised terms will be communicated and when they apply. [TERMS_UPDATE_PROCESS]",
-    "Provide the verified business contact for service questions. [BUSINESS_CONTACT]",
-  ];
-  return texts[i];
-}
 export function Interior({ route }: { route: string }) {
   if (route.includes("policy") || route === "terms-of-service")
     return (
-      <Legal
-        terms={route === "terms-of-service"}
-        cookies={route === "cookie-policy"}
-      />
+      <Legal kind={route === "terms-of-service" ? "terms" : route === "cookie-policy" ? "cookies" : "privacy"} />
     );
   if (["book-demo", "contact", "pricing"].includes(route))
     return (
@@ -597,7 +500,7 @@ export function Interior({ route }: { route: string }) {
             <p>
               {route === "pricing"
                 ? "No plan limits, prices or trial offers are represented here."
-                : "A verified contact and submission service are still needed. No meeting is booked from this preview."}
+                : <>The form below does not send a request or book a meeting. Email{" "}<a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>{" "}to contact us directly.</>}
             </p>
           </div>
         </div>

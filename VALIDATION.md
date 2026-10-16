@@ -43,7 +43,7 @@ No scroll recording was captured. Transition checks were performed interactively
 
 The initial V2 development renderer reported **34 draw calls, 6,568 triangles, 3 programs and 0 textures at DPR 1**. The later building refinement has separate measurements below. These are local renderer statistics, not field Web Vitals. Field LCP/INP/CLS, Safari, physical iOS/Android devices and screen-reader behavior were not verified.
 
-No CRM backend, database or migration was added. Real enquiry delivery, approved product capabilities, business/contact details, pricing and finalized legal wording remain required. Local preview form behavior does not prove delivery or booking.
+No CRM backend, database or migration was added. Real enquiry delivery, approved product capabilities and pricing remain required. Business/contact details and website policies were completed in the later policy revision below. Local preview form behavior does not prove delivery or booking.
 
 No hosted publication is claimed. The Sites connector returned `Sites project not found` for the project recorded in the existing manifest. The owner then clarified that Gromoze has no existing website and supplied a separate property-business site as a workflow reference. Work remains in the local Gromoze checkout; the old hosting manifest was preserved without creating or changing an external Site. Confirm the intended hosting destination before publication.
 

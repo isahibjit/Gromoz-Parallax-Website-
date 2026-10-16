@@ -36,6 +36,6 @@ Native page scrolling stays authoritative. Chapter links target scroll positions
 
 Use `lib/story.ts`: Aarya Mehta / GR-1042, Harbour House / B-804, Riya Shah, 17 October 2026 at 11:00 am, Follow-up, and Share the requested property details. Additional sample units stay clearly fictional.
 
-Capability, pricing, integration, onboarding and partner-flow copy remains provisional. The architectural scene does not promise a 3D configurator. Forms remain explicit previews until real delivery exists; missing business facts stay centralized; legal pages remain drafts.
+Capability, pricing, integration, onboarding and partner-flow copy remains provisional. The architectural scene does not promise a 3D configurator. Forms remain explicit previews until real delivery exists. Operator and contact details stay centralized in `lib/site-config.ts`; final website policies use shared typed content in `lib/legal-content.ts` and the existing legal-page layout.
 
 Architecture and fallback vector are original procedural/vector assets. The supplied logo is preserved. Story, homepage-section and interior CSS Modules isolate page composition; global styles own shared brand and shell rules. `VALIDATION.md` records actual checks; source structure alone does not establish visual quality, device compatibility or field performance.
