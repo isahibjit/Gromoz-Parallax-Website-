@@ -34,7 +34,7 @@ const pageCopy: Readonly<Record<string, PageCopy | undefined>> = {
   contact: {
     title: "Contact",
     description:
-      "Explore the Gromoze enquiry preview and describe your team's needs. Verified business contact details and enquiry delivery are awaiting configuration.",
+      "Contact Solverix Technologies Pvt. Ltd. about Gromoze by email or explore the local enquiry preview. The website form does not send a request.",
   },
   "privacy-policy": {
     title: "Privacy policy",
