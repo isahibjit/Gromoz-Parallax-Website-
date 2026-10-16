@@ -1,12 +1,14 @@
 "use client";
 
-import { Component, useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Component, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { addAfterEffect, Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ACESFilmicToneMapping, Color, InstancedMesh, Object3D, Vector3, type Group } from "three";
-import type { PropertySceneProps } from "@/lib/story";
+import { ACESFilmicToneMapping, Color, DataTexture, InstancedMesh, LinearFilter, Object3D, PerspectiveCamera, PMREMGenerator, RepeatWrapping, Vector3, type BufferGeometry, type Group, type Texture } from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { sceneRenderOverscan, type PropertySceneProps } from "@/lib/story";
 
 type Position = readonly [number, number, number];
-interface Block { readonly position: Position; readonly size: Position; readonly color?: string }
+interface Block { readonly position: Position; readonly size: Position; readonly color?: string; readonly rotation?: Position }
 interface Structure { stone: Block[]; glass: Block[]; metal: Block[]; timber: Block[]; greenery: Block[]; interior: Block[]; water: Block[] }
 
 const palette = {
@@ -29,6 +31,10 @@ function add(target: Block[], x: number, y: number, z: number, width: number, he
 /** Deterministic clusters share one low-polygon geometry, including the rooftop planting. */
 function plant(structure: Structure, x: number, y: number, z: number, height: number, seed: number, lush = false) {
   add(structure.timber, x, y + height * 0.36, z, height * 0.045, height * 0.7, height * 0.045);
+  for (let index = 0; index < 3; index++) {
+    const angle = seed + index * 2.1;
+    structure.timber.push({ position: [x, y + height * 0.54, z], size: [height * 0.024, height * 0.32, height * 0.024], rotation: [Math.cos(angle) * 0.6, 0, Math.sin(angle) * 0.6] });
+  }
   const count = lush ? 14 : 9;
   for (let index = 0; index < count; index++) {
     const angle = index * 2.4 + seed;
@@ -45,10 +51,14 @@ function plant(structure: Structure, x: number, y: number, z: number, height: nu
 /** Large trees for the ground level — taller trunks and bigger canopies. */
 function largeTree(structure: Structure, x: number, y: number, z: number, height: number, seed: number) {
   add(structure.timber, x, y + height * 0.34, z, height * 0.035, height * 0.68, height * 0.035);
-  for (let index = 0; index < 16; index++) {
+  for (let index = 0; index < 4; index++) {
+    const angle = index * 1.7 + seed;
+    structure.timber.push({ position: [x + Math.cos(angle) * height * 0.08, y + height * 0.5, z + Math.sin(angle) * height * 0.08], size: [height * 0.017, height * 0.38, height * 0.017], rotation: [Math.cos(angle) * 0.65, 0, Math.sin(angle) * 0.65] });
+  }
+  for (let index = 0; index < 28; index++) {
     const angle = index * 1.9 + seed;
     const radius = height * (index % 4 === 0 ? 0.06 : index % 4 === 1 ? 0.22 : 0.3);
-    const scale = height * (0.14 + (index % 3) * 0.03);
+    const scale = height * (0.10 + (index % 3) * 0.022);
     structure.greenery.push({
       position: [x + Math.cos(angle) * radius, y + height * (0.58 + (index % 4) * 0.08), z + Math.sin(angle) * radius],
       size: [scale * 1.2, scale * 1.1, scale],
@@ -65,6 +75,8 @@ function floors(from: number, to: number): Structure {
     const isSelected = index === selectedFloorIndex;
     // Separate slender slab edges from the recessed rooms and balcony decks.
     add(result.stone, 0, y, 0, 3.24, 0.05, 2.44);
+    // Recessed soffits and shadow reveals make the thin slab edges read as depth.
+    result.stone.push({ position: [0, y - 0.03, 0], size: [3.12, 0.012, 2.30], color: "#c7c7bd" });
     add(result.timber, 0.02, y + 0.03, 0.06, 2.66, 0.014, 1.94);
     add(result.stone, -1.37, y + 0.21, -0.13, 0.2, 0.34, 1.86);
     add(result.stone, 0, y + 0.21, -1.0, 2.84, 0.34, 0.16);
@@ -72,6 +84,7 @@ function floors(from: number, to: number): Structure {
     add(result.stone, 0.6, y + 0.20, -0.65, 1.35, 0.33, 0.08);
     // Warm rooms sit behind actual translucent glazing, rather than painted dark windows.
     add(result.interior, -0.87, y + 0.20, 0.47, 0.81, 0.30, 0.022);
+    result.interior.push({ position: [-0.87, y + 0.20, 0.49], size: [0.49, 0.22, 0.012], color: index % 3 === 0 ? palette.timber : palette.upholstery });
     if (!isSelected) {
       add(result.interior, 0.78, y + 0.19, 0.28, 0.99, 0.29, 0.028);
       add(result.interior, 1.04, y + 0.19, -0.14, 0.025, 0.29, 0.78);
@@ -95,6 +108,9 @@ function floors(from: number, to: number): Structure {
       }
     }
     // Balcony rails stay thin enough to retain the depth of the recessed glazing.
+    for (const x of [-1.27, -0.77, -0.25, 0.26, 0.77, 1.28]) {
+      if (!isSelected || x < 0.3) add(result.glass, x, y + 0.14, 1.145, 0.48, 0.14, 0.008);
+    }
     add(result.metal, 0, y + 0.22, 1.15, 3.12, 0.01, 0.01);
     add(result.metal, 0, y + 0.07, 1.15, 3.12, 0.007, 0.01);
     add(result.metal, 1.56, y + 0.22, 0, 0.01, 0.01, 2.3);
@@ -134,8 +150,8 @@ const upperFloors = floors(selectedFloorIndex + 1, totalFloors - 1);
 // ─── Enhanced podium / base ─────────────────────────────────────────
 const base = emptyStructure();
 // Ground platform
-add(base.stone, 0, 0.045, 0, 4.6, 0.09, 3.7);
-add(base.stone, 0, 0.135, 0, 4.3, 0.08, 3.4);
+add(base.stone, 0, 0.045, 0, 5.8, 0.09, 4.2);
+add(base.stone, 0, 0.135, 0, 5.5, 0.08, 4.0);
 // Entrance canopy
 add(base.stone, 0, 0.42, 0.92, 1.9, 0.04, 0.55);
 add(base.metal, -0.88, 0.24, 1.05, 0.025, 0.36, 0.025);
@@ -158,22 +174,25 @@ add(base.timber, 0, 0.42, 1.25, 1.5, 0.035, 0.8);
 // Covered parking area (reference shows a more substantial base)
 add(base.stone, -1.78, 0.22, -0.06, 0.34, 0.17, 2.6);
 add(base.stone, 1.78, 0.22, -0.06, 0.34, 0.17, 2.6);
-// Parking shade structure
-add(base.metal, -2.0, 0.38, 0.2, 0.01, 0.28, 0.01);
-add(base.metal, -2.0, 0.38, -0.6, 0.01, 0.28, 0.01);
-add(base.stone, -2.0, 0.52, -0.2, 0.8, 0.025, 0.9);
-add(base.metal, 2.0, 0.38, 0.2, 0.01, 0.28, 0.01);
-add(base.metal, 2.0, 0.38, -0.6, 0.01, 0.28, 0.01);
-add(base.stone, 2.0, 0.52, -0.2, 0.8, 0.025, 0.9);
-// Large trees at ground level — prominent landscaping
-for (const [index, z] of [-0.9, -0.3, 0.35, 0.85].entries()) {
-  largeTree(base, -1.78, 0.30, z, 0.9 + (index % 2) * 0.15, index);
-  largeTree(base, 1.78, 0.30, z, 0.85 + (index % 2) * 0.2, index + 5);
+// Rear shade structures leave the side planting strips unobstructed.
+for (const x of [-2, 2]) {
+  add(base.metal, x, 0.38, -1.3, 0.01, 0.28, 0.01);
+  add(base.metal, x, 0.38, -1.7, 0.01, 0.28, 0.01);
+  add(base.stone, x, 0.52, -1.5, 0.8, 0.025, 0.55);
+}
+// Canopies extend about 0.48 times their height from the trunk. Reserve that
+// full envelope outside the 1.62-unit balcony edge, rather than just the trunk.
+for (const [index, z] of [-1.05, -0.35, 0.38, 1.05].entries()) {
+  for (const side of [-1, 1]) {
+    const x = side * 2.32;
+    add(base.stone, x, 0.22, z, 0.42, 0.15, 0.48);
+    largeTree(base, x, 0.30, z, 0.76 + (index % 2) * 0.1, index + (side > 0 ? 5 : 0));
+  }
 }
 // Additional landscaping around the entrance
 for (const x of [-1.3, 1.23]) {
-  add(base.stone, x, 0.22, 1.43, 0.63, 0.15, 0.3);
-  plant(base, x, 0.30, 1.43, 0.5, x, true);
+  add(base.stone, x, 0.22, 1.68, 0.63, 0.15, 0.3);
+  plant(base, x, 0.30, 1.68, 0.42, x, true);
 }
 // Metal entrance railing
 for (const x of [-0.51, 0.51]) add(base.metal, x, 0.29, 0.74, 0.018, 0.24, 0.025);
@@ -196,6 +215,10 @@ add(roof.timber, 0.45, roofY + 0.035, 0.83, 1.7, 0.012, 0.16);
 add(roof.timber, 0.45, roofY + 0.035, -0.47, 1.7, 0.012, 0.16);
 add(roof.timber, -0.35, roofY + 0.035, 0.18, 0.16, 0.012, 1.14);
 add(roof.timber, 1.28, roofY + 0.035, 0.18, 0.16, 0.012, 1.14);
+// Fine deck joints and pool coping retain scale at the closer story views.
+for (let index = 0; index < 12; index++) {
+  add(roof.metal, -0.33 + index * 0.14, roofY + 0.043, 0.83, 0.003, 0.002, 0.155);
+}
 // Pool lounge chairs
 for (const x of [0.0, 0.35, 0.7]) {
   add(roof.interior, x, roofY + 0.06, 0.88, 0.22, 0.02, 0.08);
@@ -253,6 +276,9 @@ const selectedTrim: Block[] = [
   { position: [-0.73, 0.385, 0.02], size: [0.035, 0.035, 1.16] },
   { position: [0.73, 0.23, 0.59], size: [0.028, 0.32, 0.028] },
   { position: [-0.73, 0.23, 0.59], size: [0.028, 0.32, 0.028] },
+  { position: [0.73, 0.23, -0.55], size: [0.028, 0.32, 0.028] },
+  { position: [-0.73, 0.23, -0.55], size: [0.028, 0.32, 0.028] },
+  { position: [0, 0.23, 0.59], size: [0.016, 0.32, 0.02] },
 ];
 const selectedGlass: Block[] = [
   { position: [0, 0.23, 0.57], size: [1.42, 0.29, 0.015] },
@@ -272,9 +298,63 @@ interface BoxInstancesProps {
   metalness?: number;
   foliage?: boolean;
   warmth?: number;
+  finish?: "matte" | "glass" | "water";
+  surfaceMap?: Texture;
+  geometry?: BufferGeometry;
 }
 
-function BoxInstances({ blocks, color, opacity = 1, roughness = 0.82, metalness = 0.02, foliage = false, warmth = 0 }: BoxInstancesProps) {
+interface SurfaceMaps { stone: DataTexture; timber: DataTexture; water: DataTexture; edges: RoundedBoxGeometry }
+
+/** Small deterministic height maps, shared by every floor; no image downloads. */
+function createSurfaceMaps(): SurfaceMaps {
+  const create = (surface: "stone" | "timber" | "water") => {
+    const size = 128;
+    const pixels = new Uint8Array(size * size * 4);
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+      const noise = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+      const grain = noise - Math.floor(noise);
+      const value = surface === "stone" ? 180 + grain * 48
+        : surface === "timber" ? 165 + Math.sin(x * 1.1 + Math.sin(y * 0.11) * 1.4) * 26 + grain * 12
+          : 145 + Math.sin(x * 0.24 + Math.sin(y * 0.17) * 1.4) * 35 + Math.cos(y * 0.34 + x * 0.1) * 20;
+      const offset = (y * size + x) * 4;
+      pixels[offset] = pixels[offset + 1] = pixels[offset + 2] = value;
+      pixels[offset + 3] = 255;
+    }
+    const texture = new DataTexture(pixels, size, size);
+    texture.wrapS = texture.wrapT = RepeatWrapping;
+    texture.magFilter = texture.minFilter = LinearFilter;
+    texture.repeat.set(surface === "water" ? 2 : 4, surface === "timber" ? 1 : 4);
+    texture.needsUpdate = true;
+    return texture;
+  };
+  return { stone: create("stone"), timber: create("timber"), water: create("water"), edges: new RoundedBoxGeometry(1, 1, 1, 1, 0.012) };
+}
+
+/** Bake reflections once, rather than rendering an environment on every frame. */
+function ReflectionEnvironment() {
+  const { gl, get, invalidate } = useThree();
+  useEffect(() => {
+    const scene = get().scene;
+    const room = new RoomEnvironment();
+    const generator = new PMREMGenerator(gl);
+    const target = generator.fromScene(room, 0.04, 0.1, 100, { size: 128 });
+    const previous = scene.environment;
+    const previousIntensity = scene.environmentIntensity;
+    scene.environment = target.texture;
+    scene.environmentIntensity = 0.38;
+    room.dispose();
+    generator.dispose();
+    invalidate();
+    return () => {
+      scene.environment = previous;
+      scene.environmentIntensity = previousIntensity;
+      target.dispose();
+    };
+  }, [gl, get, invalidate]);
+  return null;
+}
+
+function BoxInstances({ blocks, color, opacity = 1, roughness = 0.82, metalness = 0.02, foliage = false, warmth = 0, finish = "matte", surfaceMap, geometry }: BoxInstancesProps) {
   const mesh = useRef<InstancedMesh>(null);
   useLayoutEffect(() => {
     if (!mesh.current) return;
@@ -283,6 +363,7 @@ function BoxInstances({ blocks, color, opacity = 1, roughness = 0.82, metalness 
     blocks.forEach((block, index) => {
       transform.position.set(...block.position);
       transform.scale.set(...block.size);
+      transform.rotation.set(...(block.rotation ?? [0, 0, 0]));
       transform.updateMatrix();
       mesh.current?.setMatrixAt(index, transform.matrix);
       mesh.current?.setColorAt(index, tint.set(block.color ?? color));
@@ -292,46 +373,22 @@ function BoxInstances({ blocks, color, opacity = 1, roughness = 0.82, metalness 
     mesh.current.computeBoundingSphere();
   }, [blocks, color]);
   if (blocks.length === 0) return null;
-  return <instancedMesh ref={mesh} args={[undefined, undefined, blocks.length]} castShadow={opacity === 1} receiveShadow={opacity === 1}>
-    {foliage ? <icosahedronGeometry args={[1, 1]} /> : <boxGeometry args={[1, 1, 1]} />}
-    <meshStandardMaterial color="white" roughness={roughness} metalness={metalness} transparent={opacity < 1} opacity={opacity} depthWrite={opacity === 1} emissive={palette.timber} emissiveIntensity={warmth} />
+  return <instancedMesh ref={mesh} args={[geometry, undefined, blocks.length]} castShadow={opacity === 1} receiveShadow={opacity === 1}>
+    {geometry ? null : foliage ? <icosahedronGeometry args={[1, 2]} /> : <boxGeometry args={[1, 1, 1]} />}
+    {finish === "matte" ? <meshStandardMaterial color="white" roughness={roughness} metalness={metalness} transparent={opacity < 1} opacity={opacity} depthWrite={opacity === 1} bumpMap={surfaceMap} bumpScale={0.004} emissive={palette.timber} emissiveIntensity={warmth} />
+      : <meshPhysicalMaterial color="white" roughness={roughness} metalness={0} transparent opacity={opacity} depthWrite={false} ior={finish === "water" ? 1.333 : 1.5} clearcoat={1} clearcoatRoughness={0.08} envMapIntensity={finish === "water" ? 1 : 1.35} bumpMap={surfaceMap} bumpScale={finish === "water" ? 0.012 : 0} />}
   </instancedMesh>;
 }
 
-/** Pool water surface with unique material — translucent teal, slight emissive glow. */
-function WaterInstances({ blocks }: { blocks: readonly Block[] }) {
-  const mesh = useRef<InstancedMesh>(null);
-  useLayoutEffect(() => {
-    if (!mesh.current) return;
-    const transform = new Object3D();
-    const tint = new Color();
-    blocks.forEach((block, index) => {
-      transform.position.set(...block.position);
-      transform.scale.set(...block.size);
-      transform.updateMatrix();
-      mesh.current?.setMatrixAt(index, transform.matrix);
-      mesh.current?.setColorAt(index, tint.set(block.color ?? palette.pool));
-    });
-    mesh.current.instanceMatrix.needsUpdate = true;
-    if (mesh.current.instanceColor) mesh.current.instanceColor.needsUpdate = true;
-    mesh.current.computeBoundingSphere();
-  }, [blocks]);
-  if (blocks.length === 0) return null;
-  return <instancedMesh ref={mesh} args={[undefined, undefined, blocks.length]} receiveShadow>
-    <boxGeometry args={[1, 1, 1]} />
-    <meshStandardMaterial color={palette.pool} roughness={0.1} metalness={0.05} transparent opacity={0.82} emissive={palette.poolDeep} emissiveIntensity={0.25} />
-  </instancedMesh>;
-}
-
-function StructureInstances({ structure }: { structure: Structure }) {
+function StructureInstances({ structure, maps }: { structure: Structure; maps: SurfaceMaps }) {
   return <>
-    <BoxInstances blocks={structure.stone} color={palette.stone} />
-    <BoxInstances blocks={structure.glass} color={palette.glass} opacity={0.38} roughness={0.18} metalness={0.25} />
+    <BoxInstances blocks={structure.stone} color={palette.stone} surfaceMap={maps.stone} geometry={maps.edges} />
+    <BoxInstances blocks={structure.glass} color={palette.glass} opacity={0.56} roughness={0.12} finish="glass" />
     <BoxInstances blocks={structure.metal} color={palette.metal} roughness={0.48} metalness={0.32} />
-    <BoxInstances blocks={structure.timber} color={palette.timber} />
-    <BoxInstances blocks={structure.greenery} color={palette.greenery} foliage />
-    <BoxInstances blocks={structure.interior} color={palette.upholstery} warmth={0.22} />
-    <WaterInstances blocks={structure.water} />
+    <BoxInstances blocks={structure.timber} color={palette.timber} surfaceMap={maps.timber} />
+    <BoxInstances blocks={structure.greenery} color={palette.greenery} roughness={1} foliage />
+    <BoxInstances blocks={structure.interior} color={palette.upholstery} warmth={0.14} geometry={maps.edges} />
+    <BoxInstances blocks={structure.water} color={palette.pool} opacity={0.88} roughness={0.11} finish="water" surfaceMap={maps.water} />
   </>;
 }
 
@@ -342,6 +399,8 @@ function Architecture({ state, active, onReady, onProject, onFailure }: Property
   const selectedUnit = useRef<Group>(null);
   const point = useRef(new Vector3());
   const { invalidate, gl, setFrameloop } = useThree();
+  const maps = useMemo(() => createSurfaceMaps(), []);
+  useEffect(() => () => { Object.values(maps).forEach(texture => texture.dispose()); }, [maps]);
 
   useEffect(() => {
     if (process.env.NODE_ENV !== "development") return;
@@ -392,6 +451,13 @@ function Architecture({ state, active, onReady, onProject, onFailure }: Property
   useFrame(({ camera, size }) => {
     if (!active || document.hidden || !building.current || !upper.current || !outerFacade.current || !selectedUnit.current) return;
     const { architecture, camera: view } = state;
+    const originalHeight = size.height / sceneRenderOverscan;
+    if (camera instanceof PerspectiveCamera && size.width > 0 && size.height > 0 &&
+      (camera.view?.fullWidth !== size.width || camera.view?.fullHeight !== originalHeight)) {
+      // Pan the render window upward to clear the rail. Focal length, distance
+      // and model scale stay unchanged, so the building keeps its original size.
+      camera.setViewOffset(size.width, originalHeight, 0, originalHeight * 0.06, size.width, size.height);
+    }
     camera.position.set(view.x, view.y, view.z);
     camera.lookAt(view.targetX, view.targetY, view.targetZ);
     camera.updateMatrixWorld();
@@ -408,31 +474,37 @@ function Architecture({ state, active, onReady, onProject, onFailure }: Property
   });
 
   return <>
-    <ambientLight intensity={0.38} />
-    <hemisphereLight args={["#fffdf4", "#a5aaa3", 1.2]} />
-    <directionalLight position={[-4, 9, 7]} intensity={3.0} color="#fff7e6" castShadow
+    <ReflectionEnvironment />
+    <ambientLight intensity={0.1} />
+    <hemisphereLight args={["#fffdf4", "#a5aaa3", 0.6]} />
+    <directionalLight position={[-3, 10, 7]} intensity={2.2} color="#fff7e6" castShadow
       shadow-mapSize-width={1024} shadow-mapSize-height={1024}
       shadow-camera-left={-5} shadow-camera-right={5} shadow-camera-top={8} shadow-camera-bottom={-4}
-      shadow-camera-near={0.5} shadow-camera-far={25} shadow-bias={-0.0002} shadow-normalBias={0.015} />
-    <directionalLight position={[8, 5, -4]} intensity={0.8} color="#e3edf1" />
+      shadow-camera-near={0.5} shadow-camera-far={25} shadow-bias={-0.0002} shadow-normalBias={0.015} shadow-radius={3} shadow-blurSamples={8} />
+    <directionalLight position={[8, 5, -4]} intensity={0.6} color="#e3edf1" />
     {/* Subtle fill for interior warmth */}
     <pointLight position={[0, 3, 1.2]} intensity={0.35} color="#ffe8c0" distance={8} decay={2} />
     <group ref={building}>
-      <group name="podium"><StructureInstances structure={base} /></group>
-      <group name="lower-floors"><StructureInstances structure={lowerFloors} /></group>
-      <group name="selected-floor"><StructureInstances structure={selectedFloor} /></group>
-      <group ref={upper} name="upper-floors"><StructureInstances structure={upperFloors} /><StructureInstances structure={roof} /></group>
+      <group name="podium"><StructureInstances structure={base} maps={maps} /></group>
+      <group name="lower-floors"><StructureInstances structure={lowerFloors} maps={maps} /></group>
+      <group name="selected-floor"><StructureInstances structure={selectedFloor} maps={maps} /></group>
+      <group ref={upper} name="upper-floors"><StructureInstances structure={upperFloors} maps={maps} /><StructureInstances structure={roof} maps={maps} /></group>
       <group ref={outerFacade} name="selected-facade">
         <BoxInstances blocks={facade} color={palette.stone} />
-        <group position={selectedPosition}><BoxInstances blocks={selectedGlass} color={palette.teal} opacity={0.3} roughness={0.15} metalness={0.15} /></group>
       </group>
       <group ref={selectedUnit} position={selectedPosition} name="selected-unit-b-804">
         <BoxInstances blocks={selectedTrim} color={palette.teal} roughness={0.35} metalness={0.15} />
-        <StructureInstances structure={room} />
+        <BoxInstances blocks={selectedGlass} color={palette.teal} opacity={0.3} roughness={0.1} finish="glass" />
+        <StructureInstances structure={room} maps={maps} />
       </group>
       <mesh name="ground-contact-shadow" rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.007, 0]} receiveShadow>
         <planeGeometry args={[18, 18]} />
-        <shadowMaterial transparent opacity={0.15} depthWrite={false} />
+        <shadowMaterial transparent opacity={0.13} depthWrite={false}
+          // Fade the distant cast shadow into the page, retaining contact at the podium.
+          onBeforeCompile={shader => {
+            shader.vertexShader = `varying vec2 vContactUv;\n${shader.vertexShader}`.replace("#include <begin_vertex>", "#include <begin_vertex>\nvContactUv = uv;");
+            shader.fragmentShader = `varying vec2 vContactUv;\n${shader.fragmentShader}`.replace("#include <tonemapping_fragment>", "gl_FragColor.a *= 1.0 - smoothstep(0.09, 0.28, distance(vContactUv, vec2(0.5)));\n#include <tonemapping_fragment>");
+          }} customProgramCacheKey={() => "gromoze-ground-falloff"} />
       </mesh>
     </group>
   </>;
@@ -516,13 +588,13 @@ export default function PropertyScene(props: PropertySceneProps) {
       ref={attachCanvas}
       aria-hidden="true"
       frameloop={props.active ? "demand" : "never"}
-      shadows="soft"
+      shadows="variance"
       resize={{ offsetSize: true, scroll: false }}
       dpr={[1, 1.5]}
       camera={{ position: [9, 7, 11], fov: 34, near: 0.1, far: 80 }}
       gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
       onCreated={({ gl }) => { gl.setClearColor("#f5f5f0", 0); gl.toneMapping = ACESFilmicToneMapping; gl.toneMappingExposure = 1; }}
-      style={{ pointerEvents: "none" }}
+      style={{ pointerEvents: "none", height: `${sceneRenderOverscan * 100}%` }}
     >
       <Architecture {...props} onFailure={reportFailure} />
     </Canvas>

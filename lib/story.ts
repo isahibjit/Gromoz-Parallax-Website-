@@ -92,6 +92,10 @@ export interface PropertySceneProps {
   onProject: (point: ScenePoint) => void;
   onFailure: () => void;
 }
+// Extra drawing space below the model prevents an internal canvas edge from
+// cutting off the podium while its HTML layer moves between story frames.
+export const sceneRenderOverscan = 1.15;
+
 export function createStoryState(): StorySceneState {
   return {
     progress: 0,

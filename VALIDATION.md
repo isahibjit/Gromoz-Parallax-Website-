@@ -41,8 +41,31 @@ No scroll recording was captured. Transition checks were performed interactively
 
 ## Measured limits and remaining configuration
 
-The actual development renderer reported **34 draw calls, 6,568 triangles, 3 programs and 0 textures at DPR 1**. These are local renderer statistics, not field Web Vitals. Field LCP/INP/CLS, Safari, physical iOS/Android devices and screen-reader behavior were not verified.
+The initial V2 development renderer reported **34 draw calls, 6,568 triangles, 3 programs and 0 textures at DPR 1**. The later building refinement has separate measurements below. These are local renderer statistics, not field Web Vitals. Field LCP/INP/CLS, Safari, physical iOS/Android devices and screen-reader behavior were not verified.
 
 No CRM backend, database or migration was added. Real enquiry delivery, approved product capabilities, business/contact details, pricing and finalized legal wording remain required. Local preview form behavior does not prove delivery or booking.
 
 No hosted publication is claimed. The Sites connector returned `Sites project not found` for the project recorded in the existing manifest. The owner then clarified that Gromoze has no existing website and supplied a separate property-business site as a workflow reference. Work remains in the local Gromoze checkout; the old hosting manifest was preserved without creating or changing an external Site. Confirm the intended hosting destination before publication.
+
+## Building realism refinement - 16 October 2026
+
+- Preserved the owner's thirteen-floor model, rooftop pool, larger landscaping, selected apartment and animated floor groups.
+- Reused `BoxInstances` for reflective glazing and pool water, removing the separate duplicate water-instance setup. Shared 128px procedural surface maps and a beveled geometry add stone/timber detail and softer architectural edges. A 128px reflection environment is baked once per renderer mount; resources are disposed on cleanup. No new dependencies or remote model/texture requests were added.
+- Natural branches, finer canopy clusters, balcony glass, recessed soffits and varied room finishes improve architectural depth. The ground shadow fades toward its distant edge; pool water uses reflected light without emissive glow.
+- Final lint, strict TypeScript, production build (20 pages) and all four regression tests passed. The design detector reported no findings for the two changed UI files.
+- Local Chrome inspection covered the fully loaded desktop model, property cutaway and 390x844 mobile poster fallback. Desktop console inspection found no application errors. Evidence: `building-realism-desktop.jpg`, `building-realism-cutaway.jpg`, `building-realism-mobile.jpg` in `artifacts/v2/`.
+- The refined opening frame reported **38 draw calls, 119,558 triangles, 9 programs and 6 textures at DPR 1**. Demand rendering, offscreen/hidden pause and the 1.5 DPR ceiling remain. These figures do not establish physical-device frame rates or field performance.
+
+## Tree clearance and complete cutaway framing - 16 October 2026
+
+- Moved ground trees into outboard planters, reduced their canopy size, widened the podium and relocated the small rear shades. The side canopy envelope now clears the balcony edge; entrance planting also sits beyond the front overhang. The SVG poster mirrors the wider planting layout.
+- Selected apartment glass now belongs to the moving room, alongside its floor, furniture and completed corner frame. It no longer separates from the room when the facade shifts.
+- The initial automatic camera-fitting attempt was removed after the owner rejected its smaller visual scale. Its helper and associated tests were removed as well. The existing model, tree clearance and completed apartment enclosure are retained.
+- Earlier reduced-size evidence is preserved in `building-clearance-cutaway.jpg`, `building-clearance-transition.jpg` and `building-clearance-compact.jpg`; those images do not represent the final camera scale. The mobile poster is recorded in `building-clearance-mobile.jpg`.
+
+## Original building size restored - 16 October 2026
+
+- Restored the authored camera distances and model scale. A small vertical render-window offset repositions the image without changing focal length or shrinking the geometry.
+- The canvas has 15% additional drawing space below its original boundary, with the projection adjusted to preserve the original pixel scale. This removes the internal rectangular crop during the model-layer handoff. The existing stage and chapter rail still define the page composition.
+- The property-to-visit handoff holds the property camera instead of applying the previous close-up zoom before the surface completes its move. Tree clearance, model detail and the complete selected-unit frame/glass remain in place.
+- Final lint, production build (including strict TypeScript, 20 pages) and all four remaining regression tests passed. Evidence: `building-restored-size.jpg`, `building-restored-cutaway.jpg`, `building-restored-transition.jpg`.

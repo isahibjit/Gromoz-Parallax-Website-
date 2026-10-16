@@ -574,19 +574,8 @@ export function HomeStory() {
           0.27,
         )
         .addLabel("property", 0.34)
-        .to(
-          scene.camera,
-          {
-            x: 6.2,
-            y: 5.8,
-            z: 7.6,
-            targetX: 0.6,
-            targetY: 3.8,
-            targetZ: 0.3,
-            duration: 0.05,
-          },
-          0.43,
-        )
+        // Keep the full-building camera during the visit handoff. Zooming in
+        // before the model surface settles caused the roof/base to be clipped.
         .to(
           scene.surfaces.model,
           { x: 0.67, y: 0.05, scale: 0.56, opacity: 0.75, duration: 0.065 },
