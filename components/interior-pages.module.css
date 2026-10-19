@@ -30,6 +30,46 @@
   font-size: 12px;
   margin: 18px 0 0;
 }
+.capabilities {
+  padding-block: 64px;
+  scroll-margin-top: 100px;
+}
+.capabilities h2 {
+  font-size: clamp(28px, 3vw, 40px);
+}
+.capabilities > p {
+  max-width: 700px;
+}
+.capabilityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 32px;
+  border-top: 1px solid var(--border);
+  margin-top: 32px;
+}
+.capabilityGrid article {
+  padding-block: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.capabilityGrid h3 {
+  font-size: 19px;
+}
+.capabilityGrid p {
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 10px 0 0;
+}
+.capabilityNote {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 24px;
+}
+@media (max-width: 900px) {
+  .capabilityGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .capabilityGrid { grid-template-columns: 1fr; }
+}
 .featureBody {
   padding-block: 24px 80px;
   display: grid;

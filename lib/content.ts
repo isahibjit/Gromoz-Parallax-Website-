@@ -1,4 +1,33 @@
 export type Approval = "draft" | "approved" | "hidden";
+// Product areas checked against the CRM implementation. Availability depends on
+// workspace configuration and user permissions.
+export const workspaceCapabilities = [
+  {
+    title: "Leads and follow-ups",
+    description: "Capture and import enquiries, assign owners, configure assignment rules, track stages and schedule follow-ups.",
+  },
+  {
+    title: "Projects and site visits",
+    description: "Organize project and property details, and coordinate visits with the team.",
+  },
+  {
+    title: "Bookings and payouts",
+    description: "Manage booking records and review brokerage, incentives and payment details.",
+  },
+  {
+    title: "Teams and employee operations",
+    description: "Manage employees, teams, attendance, leave, payroll and tasks from the workspace.",
+  },
+  {
+    title: "Workspace and access control",
+    description: "Use a dedicated workspace with a Gromoze subdomain, configure branding and manage role-based access.",
+  },
+  {
+    title: "Reports and integrations",
+    description: "Review sales and team performance, import leads and configure available notification providers.",
+  },
+] as const;
+
 export const modules: {
   slug: string;
   title: string;
@@ -11,7 +40,7 @@ export const modules: {
     title: "Lead management",
     task: "Give every enquiry a clear owner.",
     detail:
-      "Explore a buyer’s property requirements, a named owner and the next follow-up around one sample enquiry.",
+      "Capture enquiries, assign the right owner and keep the next follow-up in view.",
     status: "draft",
   },
   {
@@ -19,7 +48,7 @@ export const modules: {
     title: "Property inventory",
     task: "Find the property that fits.",
     detail:
-      "Review the sample project, unit, apartment configuration and area alongside the buyer’s requirements.",
+      "Organize project and property information for your sales team.",
     status: "draft",
   },
   {
@@ -27,7 +56,7 @@ export const modules: {
     title: "Site visits",
     task: "Turn interest into a visit.",
     detail:
-      "Review the visit time, property and owner, then prepare the questions and property details for the follow-up.",
+      "Coordinate site visits and keep the visit details connected to the sales process.",
     status: "draft",
   },
   {
@@ -35,7 +64,7 @@ export const modules: {
     title: "Sales pipeline",
     task: "See the next step in every deal.",
     detail:
-      "Explore stages and visible next actions so a team can discuss progress with context.",
+      "Track lead stages and follow-ups to keep sales progress visible.",
     status: "draft",
   },
   {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Check, UserRound } from "lucide-react";
-import { audiences, modules } from "@/lib/content";
+import { audiences, modules, workspaceCapabilities } from "@/lib/content";
 import { sampleLead } from "@/lib/story";
 import { CTA } from "./ui";
 import styles from "./interior-pages.module.css";
@@ -360,7 +360,9 @@ export function FeaturePage({
         <p className={styles.intro}>{feature.detail}</p>
         <CTA />
         <p className={styles.draft}>
-          Illustrative workflow · Product capabilities awaiting confirmation.
+          {feature.slug === "channel-partners"
+            ? "Illustrative workflow · Partner access and scope to be confirmed."
+            : "Illustrative workflow · Availability depends on workspace setup and permissions."}
         </p>
       </section>
       <section
@@ -478,8 +480,9 @@ export function SolutionPage({
             ))}
           </ul>
           <p>
-            Proposed workflows. Confirm capabilities and access rules during a
-            demo.
+            {audience.slug === "channel-partners"
+              ? "Illustrative workflow. Confirm partner access and scope during a demo."
+              : "Illustrative workflow. Availability depends on workspace setup and permissions."}
           </p>
         </div>
       </section>
@@ -535,8 +538,8 @@ export function ProductOverview() {
           The whole conversation.
         </h1>
         <p className={styles.intro}>
-          Explore how the person, the property, the visit and the next action
-          connect around a shared sales record.
+          Manage enquiries, projects, site visits, bookings and team operations
+          in a workspace designed for real estate sales.
         </p>
         <div className="hero-actions">
           <CTA />
@@ -545,7 +548,7 @@ export function ProductOverview() {
           </CTA>
         </div>
         <p className={styles.draft}>
-          Sample workflow · Proposed product capabilities.
+          The preview below uses fictional data. Features depend on workspace setup and permissions.
         </p>
       </section>
       <section className={`container ${styles.overview}`}>
@@ -568,6 +571,19 @@ export function ProductOverview() {
             ))}
         </nav>
         <FocusedPreview kind="enquiry" />
+      </section>
+      <section id="workspace-capabilities" className={`container ${styles.capabilities}`} aria-labelledby="workspace-capabilities-heading">
+        <h2 id="workspace-capabilities-heading">Tools for your sales operation</h2>
+        <p>Bring customer conversations, property activity and team operations into the same workspace.</p>
+        <div className={styles.capabilityGrid}>
+          {workspaceCapabilities.map((capability) => (
+            <article key={capability.title}>
+              <h3>{capability.title}</h3>
+              <p>{capability.description}</p>
+            </article>
+          ))}
+        </div>
+        <p className={styles.capabilityNote}>Access depends on your workspace and permissions. Email and WhatsApp providers must be configured before use.</p>
       </section>
       <section className={`container ${styles.overviewFollow}`}>
         <h2>

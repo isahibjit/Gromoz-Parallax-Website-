@@ -4,7 +4,7 @@ import "./globals.css";
 
 const title = "Gromoze | Real Estate Sales Software";
 const description =
-  "Explore how property enquiries, site visits and sales follow-ups connect in Gromoze's illustrative workspace for real estate teams. Private product concept.";
+  "Gromoze helps real estate teams manage leads, projects, site visits, bookings and team operations in one workspace.";
 
 export const metadata: Metadata = {
   title: {

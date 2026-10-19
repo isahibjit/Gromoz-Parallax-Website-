@@ -34,6 +34,14 @@
 .previewFoot{display:flex;justify-content:space-between;gap:16px;padding:12px 24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
 .inlineLink{display:inline-flex;align-items:center;gap:16px;color:var(--action);font-size:14px;font-weight:550;text-decoration:none;min-height:44px;padding-block:12px}
 .inlineLink:hover{text-decoration:underline}
+.capabilities{background:var(--off)}
+.capabilityGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;border-top:1px solid var(--border)}
+.capabilityGrid article{padding:28px 0;border-bottom:1px solid var(--border)}
+.capabilityGrid h3{font-size:20px;line-height:1.35;font-weight:600}
+.capabilityGrid p{font-size:14px;line-height:1.7;margin:10px 0 0;max-width:380px}
+.capabilityNote{font-size:13px;line-height:1.6;margin:24px 0 0;color:var(--muted)}
+@media(max-width:900px){.capabilityGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.capabilityGrid{grid-template-columns:1fr}.capabilityGrid article{padding-block:22px}}
 .previewColumn>.inlineLink{margin-top:8px}
 .enquiryColumns{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,1.2fr);gap:25px;min-height:239px}
 .fieldLabel{font-size:12px;color:var(--muted);display:block;margin-bottom:12px}

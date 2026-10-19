@@ -164,7 +164,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                         <ArrowUpRight size={16} />
                       </Link>
                     ))}
-                    <small>Concept pages · capabilities under review</small>
+                    <small>Sample workflows · availability depends on your setup</small>
                   </div>
                 )}
               </div>
@@ -190,7 +190,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </Link>
             <p>Real Estate Sales. Simplified.</p>
             <small>
-              Private website concept. Product claims pending approval.
+              A workspace for real estate sales teams.
             </small>
           </div>
           <div>
@@ -484,7 +484,7 @@ export function Interior({ route }: { route: string }) {
             </li>
             <li>
               <Check size={18} />
-              Explore the proposed workspace
+              Explore the Gromoze workspace
             </li>
             <li>
               <Check size={18} />
@@ -522,13 +522,12 @@ export function Interior({ route }: { route: string }) {
           </h1>
           <p>
             Real estate sales moves between people, properties and decisions.
-            Gromoze’s working purpose is to bring that context together in a
+            Gromoze brings that context together in a
             shared workspace.
           </p>
           <p>
-            This website explores that purpose through fictional sales records.
-            The modules are planning assumptions; the final product scope is
-            awaiting confirmation.
+            This website illustrates those workflows with fictional sales records.
+            Features depend on workspace setup and user permissions.
           </p>
           <CTA />
         </section>
@@ -545,9 +544,8 @@ export function Interior({ route }: { route: string }) {
               moving.
             </p>
             <p>
-              Company, founder and team details will be added when verified.
-              This preview includes no invented founding story or customer
-              claims.
+              Gromoze is a product of {siteConfig.legalEntity}, built for teams
+              coordinating real estate sales and their day-to-day operations.
             </p>
           </div>
         </section>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, Building2, CalendarDays, Check, ChevronDown, Clock3, Users } from "lucide-react";
 import { sampleLead } from "@/lib/story";
+import { workspaceCapabilities } from "@/lib/content";
 import { CTA } from "./ui";
 import styles from "./homepage-sections.module.css";
 
@@ -15,10 +16,11 @@ const explorerItems = [
 ] as const;
 
 const questions = [
-  ["Who is Gromoze intended for?", "Gromoze is being shaped around real estate developers, brokerages and sales teams. Explore the sample workflows, then discuss the needs of your team in a demo conversation."],
-  ["Is the information in the product preview real?", "No. Aarya Mehta, Harbour House and the other example details are fictional. The preview illustrates how enquiries, properties, visits and next actions could connect. Product capabilities are subject to confirmation."],
+  ["Who is Gromoze intended for?", "Gromoze is designed for real estate developers, brokerages and sales teams managing enquiries, properties and their day-to-day sales work."],
+  ["Is the information in the product preview real?", "No. Aarya Mehta, Harbour House and the other example details are fictional. The interactive preview illustrates a workflow; it is not a live customer workspace."],
   ["What should we bring to a demo conversation?", "A little context about your team, the properties you work with and the steps in your sales process. You can also include any specific requirements in the demo form."],
   ["How can we find out about pricing?", "Pricing has not been confirmed. The pricing enquiry helps you describe your business type, team size and requirements so the right setup can be discussed."],
+  ["Can our team use its own workspace?", "Gromoze supports separate organization workspaces, branded login settings and role-based access. Available features depend on your workspace configuration and permissions."],
   ["Can we discuss imports and integrations?", "Include the systems you use and the information you want to bring across in your enquiry. Availability, scope and onboarding arrangements need to be confirmed with Gromoze."],
   ["Do the sample controls change an account?", "No. The interactions on this page only change the local preview and reset when you reload. The demo request form separately explains whether enquiry delivery is configured before you submit."],
 ] as const;
@@ -154,6 +156,29 @@ function AudienceStories() {
   </div></section>;
 }
 
+function WorkspaceCapabilities() {
+  return (
+    <section className={`${styles.section} ${styles.capabilities}`} aria-labelledby="capabilities-heading">
+      <div className={styles.container}>
+        <div className={styles.sectionHeading}>
+          <h2 id="capabilities-heading">More of your work,<br />in one workspace.</h2>
+          <p>From the first enquiry to team operations, see the tools built into Gromoze.</p>
+        </div>
+        <div className={styles.capabilityGrid}>
+          {workspaceCapabilities.map((capability) => (
+            <article key={capability.title}>
+              <h3>{capability.title}</h3>
+              <p>{capability.description}</p>
+            </article>
+          ))}
+        </div>
+        <p className={styles.capabilityNote}>Features depend on workspace setup and user permissions. External providers require configuration.</p>
+        <Link href="/product#workspace-capabilities" className={styles.inlineLink}>Explore the workspace<ArrowUpRight size={18} aria-hidden="true" /></Link>
+      </div>
+    </section>
+  );
+}
+
 const dayTasks = [
   { title: "Give a new enquiry an owner", text: "A fictional website enquiry is ready to review.", action: "Assign to Riya", done: "Assigned in this preview", icon: Users },
   { title: "Confirm the Harbour House visit", text: `${sampleLead.name} · ${sampleLead.visitShortDate}, ${sampleLead.visitTime}`, action: "Confirm sample visit", done: "Confirmed in this preview", icon: CalendarDays },
@@ -178,5 +203,5 @@ function FinalInvitation() {
 }
 
 export function HomeSections() {
-  return <div className={styles.homeSections}><ProductExplorer /><AudienceStories /><DayQueue /><PricingInvitation /><Questions /><FinalInvitation /></div>;
+  return <div className={styles.homeSections}><ProductExplorer /><WorkspaceCapabilities /><AudienceStories /><DayQueue /><PricingInvitation /><Questions /><FinalInvitation /></div>;
 }
