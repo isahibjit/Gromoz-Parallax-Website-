@@ -19,7 +19,7 @@ const questions = [
   ["Who is Gromoze intended for?", "Gromoze is designed for real estate developers, brokerages and sales teams managing enquiries, properties and their day-to-day sales work."],
   ["Is the information in the product preview real?", "No. Aarya Mehta, Harbour House and the other example details are fictional. The interactive preview illustrates a workflow; it is not a live customer workspace."],
   ["What should we bring to a demo conversation?", "A little context about your team, the properties you work with and the steps in your sales process. You can also include any specific requirements in the demo form."],
-  ["How can we find out about pricing?", "Pricing has not been confirmed. The pricing enquiry helps you describe your business type, team size and requirements so the right setup can be discussed."],
+  ["How can we find out about pricing?", "Visit the pricing page to see available plans and contact the team to discuss your requirements."],
   ["Can our team use its own workspace?", "Gromoze supports separate organization workspaces, branded login settings and role-based access. Available features depend on your workspace configuration and permissions."],
   ["Can we discuss imports and integrations?", "Include the systems you use and the information you want to bring across in your enquiry. Availability, scope and onboarding arrangements need to be confirmed with Gromoze."],
   ["Do the sample controls change an account?", "No. The interactions on this page only change the local preview and reset when you reload. The demo request form separately explains whether enquiry delivery is configured before you submit."],
@@ -191,7 +191,7 @@ function DayQueue() {
 }
 
 function PricingInvitation() {
-  return <section className={styles.pricing} aria-labelledby="pricing-invitation-heading"><div className={`${styles.container} ${styles.pricingInner}`}><div><h2 id="pricing-invitation-heading">Find the right setup<br />for your team.</h2><p>Tell us about your team size and the way you sell.<br />Pricing and availability can be discussed from there.</p></div><div className={styles.pricingAction}><CTA href="/pricing">Discuss your requirements</CTA><span>Plans and pricing are yet to be confirmed.</span></div></div></section>;
+  return <section className={styles.pricing} aria-labelledby="pricing-invitation-heading"><div className={`${styles.container} ${styles.pricingInner}`}><div><h2 id="pricing-invitation-heading">Find the right setup<br />for your team.</h2><p>Tell us about your team size and the way you sell.<br />Explore available plans and discuss your requirements with our team.</p></div><div className={styles.pricingAction}><CTA href="/pricing">View plans and pricing</CTA><span>Contact us to discuss the right setup for your team.</span></div></div></section>;
 }
 
 function Questions() {

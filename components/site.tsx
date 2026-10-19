@@ -11,6 +11,7 @@ import { legalDocuments, type LegalKind } from "@/lib/legal-content";
 import { CTA, Logo } from "./ui";
 import { FeaturePage, ProductOverview, SolutionPage } from "./interior-pages";
 import interiorStyles from "./interior-pages.module.css";
+import { PricingPage } from "./pricing-page";
 
 function subscribeMotion(callback: () => void) {
   window.addEventListener("motionchange", callback);
@@ -200,7 +201,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <Link href="/features/property-inventory">Property inventory</Link>
             <Link href="/features/site-visit-management">Site visits</Link>
             <Link href="/features/sales-pipeline">Sales pipeline</Link>
-            <Link href="/pricing">Pricing enquiry</Link>
+            <Link href="/pricing">Pricing</Link>
           </div>
           <div>
             <h3>Solutions</h3>
@@ -257,7 +258,7 @@ export function Home() {
   return <><HomeStory /><HomeSections /></>;
 }
 const subscribeHydration = () => () => {};
-function DemoForm({ pricing = false }: { pricing?: boolean }) {
+function DemoForm() {
   const hydrated = useSyncExternalStore(subscribeHydration, () => true, () => false);
   const [done, setDone] = useState(false);
   const result = useRef<HTMLDivElement>(null);
@@ -300,11 +301,7 @@ function DemoForm({ pricing = false }: { pricing?: boolean }) {
         </div>
       )}
       <div hidden={done}>
-          <h2>
-            {pricing
-              ? "Tell us about your setup."
-              : "Let’s start with your team."}
-          </h2>
+          <h2>Let?s start with your team.</h2>
           <div className="form-grid">
             <label>
               Name
@@ -392,7 +389,7 @@ function DemoForm({ pricing = false }: { pricing?: boolean }) {
             <Link href="/privacy-policy">privacy policy</Link>.
           </p>
           <button className="button" type="submit" disabled={!hydrated}>
-            {"Preview " + (pricing ? "pricing enquiry" : "demo request")}
+            Preview demo request
             <ArrowRight size={17} />
           </button>
         </div>
@@ -442,25 +439,16 @@ export function Interior({ route }: { route: string }) {
     return (
       <Legal kind={route === "terms-of-service" ? "terms" : route === "cookie-policy" ? "cookies" : "privacy"} />
     );
-  if (["book-demo", "contact", "pricing"].includes(route))
+  if (route === "pricing") return <PricingPage />;
+  if (["book-demo", "contact"].includes(route))
     return (
       <section className="container interior form-page">
         <div>
           <span className="eyebrow">
-            {route === "pricing"
-              ? "Requirements before price"
-              : route === "contact"
-                ? "A conversation starts here"
-                : "See the workflow together"}
+            {route === "contact" ? "A conversation starts here" : "See the workflow together"}
           </span>
           <h1>
-            {route === "pricing" ? (
-              <>
-                The right setup
-                <br />
-                starts with you.
-              </>
-            ) : route === "contact" ? (
+            {route === "contact" ? (
               <>
                 Let’s talk about
                 <br />
@@ -493,18 +481,14 @@ export function Interior({ route }: { route: string }) {
           </ul>
           <div className="honest-note">
             <strong>
-              {route === "pricing"
-                ? "Pricing has not been confirmed."
-                : "This is a preview enquiry experience."}
+              This is a preview enquiry experience.
             </strong>
             <p>
-              {route === "pricing"
-                ? "No plan limits, prices or trial offers are represented here."
-                : <>The form below does not send a request or book a meeting. Email{" "}<a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>{" "}to contact us directly.</>}
+              The form below does not send a request or book a meeting. Email{" "}<a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>{" "}to contact us directly.
             </p>
           </div>
         </div>
-        <DemoForm pricing={route === "pricing"} />
+        <DemoForm />
       </section>
     );
   const feature = modules.find((m) => route === "features/" + m.slug);

@@ -1,0 +1,16 @@
+.pricing { padding-block: 72px 96px; }
+.intro { max-width: 720px; margin-bottom: 40px; }
+.intro h1 { margin: 12px 0 18px; }
+.intro p, .note { color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; align-items: stretch; }
+.card { display: flex; flex-direction: column; padding: 28px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); }
+.card h2 { margin: 0; font-size: 24px; }
+.card > p { color: var(--muted); }
+.rates { margin: 20px 0; flex: 1; }
+.rates p { margin: 0 0 14px; }
+.rates strong { display: inline-block; color: var(--navy); font-size: 24px; }
+.rates span { display: block; color: var(--muted); font-size: 14px; }
+.setup { font-size: 14px; }
+.card :global(.button) { align-self: flex-start; margin-top: 12px; }
+.note { margin-top: 28px; font-size: 14px; }
+@media (max-width: 650px) { .pricing { padding-block: 48px 64px; } .card { padding: 22px; } }

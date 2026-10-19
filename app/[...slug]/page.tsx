@@ -17,9 +17,9 @@ const pageCopy: Readonly<Record<string, PageCopy | undefined>> = {
       "Follow a sample property enquiry through ownership, a unit discussion, a site visit and the next action in the proposed Gromoze workspace.",
   },
   pricing: {
-    title: "Pricing enquiry",
+    title: "Plans and pricing",
     description:
-      "Outline your real estate team's size and workflow requirements in Gromoze's pricing enquiry preview. Plans and prices are awaiting confirmation.",
+      "Explore current Gromoze plans and pricing for your real estate sales team.",
   },
   about: {
     title: "About Gromoze",

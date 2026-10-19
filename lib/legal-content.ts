@@ -44,14 +44,14 @@ export const legalDocuments: Readonly<Record<LegalKind, LegalDocument>> = {
       {
         title: "Demo and enquiry forms",
         paragraphs: [
-          "The current demo, contact and pricing forms validate entries locally in your browser. They do not transmit entries to us, save them to a Gromoze server or book a meeting. Form entries are not written to the website's local or session storage. Your own browser may separately offer autofill or remember form values according to its settings.",
+          "The current demo and contact forms validate entries locally in your browser. They do not transmit entries to us, save them to a Gromoze server or book a meeting. Form entries are not written to the website's local or session storage. Your own browser may separately offer autofill or remember form values according to its settings.",
           "A completed form preview is not a submitted enquiry. To send an enquiry, use the email contact below. We will update this policy and the form notice before enabling online form delivery or introducing a different use of form information.",
         ],
       },
       {
         title: "How information is used",
         paragraphs: [
-          "Website requests are used to deliver pages and assets. Browser preferences are used to respect your motion choice and restore your position in the product story. Operational information may be used to maintain availability, diagnose failures, prevent misuse and protect the website.",
+          "Website requests are used to deliver pages and assets. The pricing page requests current plans from the Gromoze CRM service at crm.gromoze.com; this request includes standard connection information such as your IP address. Browser preferences are used to respect your motion choice and restore your position in the product story. Operational information may be used to maintain availability, diagnose failures, prevent misuse and protect the website.",
           "Information you send directly is used to answer your questions, discuss the requirements you raise, manage that correspondence and meet applicable legal obligations or address a dispute. Trying the website's sample controls does not subscribe you to marketing messages. Where a use requires consent, that consent must relate to the particular use; visiting this page is not blanket consent to unrelated processing.",
         ],
       },
